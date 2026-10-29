@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Donnees brutes chargees par ingestion/load_bigquery.py
+    schema: raw
+    tables:
+      - name: gl_entries
+        description: Grand livre fictif, une ligne par mouvement debit ou credit
+      - name: budget
+        description: Budget mensuel par entite et par compte de resultat, en devise locale
+      - name: fx_rates
+        description: Taux de change Eurostat (ert_bil_eur_m), unites de devise pour 1 EUR
+      - name: entities
+        description: Referentiel des filiales
+      - name: chart_of_accounts
+        description: Plan de comptes simplifie et mapping vers les lignes du P&L

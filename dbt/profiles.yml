@@ -1,0 +1,14 @@
+# Connexion de dbt a BigQuery.
+# Local : utilise tes identifiants gcloud (gcloud auth application-default login).
+# GitHub Actions : on passera par un compte de service (etape 4).
+finpipe:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: "{{ env_var('GCP_PROJECT_ID') }}"
+      dataset: finpipe          # prefixe des datasets crees : finpipe_staging, finpipe_marts
+      location: EU
+      threads: 4
+      job_execution_timeout_seconds: 300

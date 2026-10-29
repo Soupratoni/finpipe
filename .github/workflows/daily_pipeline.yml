@@ -1,0 +1,33 @@
+# Execution quotidienne du pipeline FinGroup dans un conteneur Docker
+name: daily-pipeline
+
+on:
+  schedule:
+    - cron: "30 4 * * *"   # tous les jours a 04:30 UTC (5h30 ou 6h30 a Paris)
+  workflow_dispatch:         # bouton "Run workflow" pour lancer a la main
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Authentification Google Cloud (compte de service)
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Construire l'image Docker
+        run: docker build -t finpipe:${{ github.sha }} .
+
+      - name: Lancer le pipeline dans le conteneur
+        run: |
+          docker run --rm \
+            -e GCP_PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}" \
+            -e GOOGLE_APPLICATION_CREDENTIALS=/creds/key.json \
+            -v "${{ steps.auth.outputs.credentials_file_path }}:/creds/key.json:ro" \
+            finpipe:${{ github.sha }}

@@ -1,0 +1,15 @@
+name: finpipe
+version: "1.0.0"
+profile: finpipe
+
+model-paths: ["models"]
+test-paths: ["tests"]
+
+models:
+  finpipe:
+    staging:
+      +materialized: view      # vues : rien n'est stocke, compatible sandbox
+      +schema: staging
+    marts:
+      +materialized: table     # CREATE OR REPLACE TABLE : pas de DML, compatible sandbox
+      +schema: marts

@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: fct_pnl_monthly
+    description: >
+      P&L de gestion mensuel consolide en EUR, reel vs budget, par entite et par compte.
+      Table lue par Power BI.
+    columns:
+      - name: period
+        data_tests: [not_null]
+      - name: entity_id
+        data_tests: [not_null]
+      - name: fx_avg_rate
+        description: Taux moyen du mois (devise pour 1 EUR). Nul = taux Eurostat manquant.
+        data_tests: [not_null]
+      - name: actual_eur
+        data_tests: [not_null]
+      - name: pnl_order
+        description: Ordre d'affichage des lignes du P&L (1 = CA ... 5 = amortissements)
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
